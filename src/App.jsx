@@ -1,4 +1,5 @@
 import { useState } from "react"
+import { Routes, Route, Link, useParams } from "react-router-dom"
 
 import leonardo from "./assets/leonardo.png"
 import canva from "./assets/canva.png"
@@ -7,54 +8,84 @@ import midjourney from "./assets/midjourney.png"
 import adobe from "./assets/adobe.png"
 import playground from "./assets/playground.png"
 
-function App() {
+const tools = [
+  {
+    slug: "leonardo-ai",
+    name: "Leonardo AI",
+    category: "AI Image Generator",
+    description: "Create stunning AI-generated artwork and assets.",
+    fullDescription:
+      "Leonardo AI is useful for creating AI art, game assets, character concepts, product visuals, and creative image generations. It is popular among designers, creators, and digital artists.",
+    pricing: "Free + Paid",
+    bestFor: "AI art, game assets, concept design",
+    link: "https://leonardo.ai",
+    image: leonardo,
+  },
+  {
+    slug: "canva-ai",
+    name: "Canva AI",
+    category: "AI Design",
+    description: "Design social posts, thumbnails, and graphics easily.",
+    fullDescription:
+      "Canva AI helps creators make social media graphics, YouTube thumbnails, posters, presentations, and marketing designs using AI-powered design features.",
+    pricing: "Free + Paid",
+    bestFor: "Social media design, thumbnails, posters",
+    link: "https://www.canva.com",
+    image: canva,
+  },
+  {
+    slug: "remove-bg",
+    name: "Remove.bg",
+    category: "Background Remover",
+    description: "Remove image backgrounds instantly using AI.",
+    fullDescription:
+      "Remove.bg is a simple AI tool for removing backgrounds from photos. It is useful for product images, profile photos, thumbnails, and e-commerce visuals.",
+    pricing: "Free + Paid",
+    bestFor: "Background removal, product photos",
+    link: "https://www.remove.bg",
+    image: removebg,
+  },
+  {
+    slug: "midjourney",
+    name: "Midjourney",
+    category: "AI Art",
+    description: "Generate cinematic AI art and creative visuals.",
+    fullDescription:
+      "Midjourney is known for high-quality AI artwork, cinematic images, fantasy art, concept visuals, and creative image generation.",
+    pricing: "Paid",
+    bestFor: "Cinematic art, fantasy images, concept visuals",
+    link: "https://www.midjourney.com",
+    image: midjourney,
+  },
+  {
+    slug: "adobe-firefly",
+    name: "Adobe Firefly",
+    category: "AI Image Editor",
+    description: "Professional AI image editing tools from Adobe.",
+    fullDescription:
+      "Adobe Firefly provides AI image generation and editing features for designers, marketers, and professional creators. It works well with Adobe creative workflows.",
+    pricing: "Free + Paid",
+    bestFor: "Professional editing, generative fill, design",
+    link: "https://firefly.adobe.com",
+    image: adobe,
+  },
+  {
+    slug: "playground-ai",
+    name: "Playground AI",
+    category: "AI Generator",
+    description: "Generate realistic AI images in seconds.",
+    fullDescription:
+      "Playground AI is an AI image generation platform for creating realistic images, artwork, and design visuals with simple prompts.",
+    pricing: "Free + Paid",
+    bestFor: "Realistic images, AI artwork, quick generations",
+    link: "https://playgroundai.com",
+    image: playground,
+  },
+]
+
+function HomePage() {
   const [search, setSearch] = useState("")
   const [selectedCategory, setSelectedCategory] = useState("All")
-
-  const tools = [
-    {
-      name: "Leonardo AI",
-      category: "AI Image Generator",
-      description: "Create stunning AI-generated artwork and assets.",
-      link: "https://leonardo.ai",
-      image: leonardo,
-    },
-    {
-      name: "Canva AI",
-      category: "AI Design",
-      description: "Design social posts, thumbnails, and graphics easily.",
-      link: "https://www.canva.com",
-      image: canva,
-    },
-    {
-      name: "Remove.bg",
-      category: "Background Remover",
-      description: "Remove image backgrounds instantly using AI.",
-      link: "https://www.remove.bg",
-      image: removebg,
-    },
-    {
-      name: "Midjourney",
-      category: "AI Art",
-      description: "Generate cinematic AI art and creative visuals.",
-      link: "https://www.midjourney.com",
-      image: midjourney,
-    },
-    {
-      name: "Adobe Firefly",
-      category: "AI Image Editor",
-      description: "Professional AI image editing tools from Adobe.",
-      link: "https://firefly.adobe.com",
-      image: adobe,
-    },
-    {
-      name: "Playground AI",
-      category: "AI Generator",
-      description: "Generate realistic AI images in seconds.",
-      link: "https://playgroundai.com",
-      image: playground,
-    },
-  ]
 
   const categories = [
     "All",
@@ -78,35 +109,7 @@ function App() {
   })
 
   return (
-    <div className="min-h-screen bg-black text-white overflow-hidden scroll-smooth">
-      <div className="absolute top-0 left-0 w-[600px] h-[600px] bg-cyan-500/20 blur-[160px] rounded-full"></div>
-      <div className="absolute bottom-0 right-0 w-[600px] h-[600px] bg-purple-500/20 blur-[160px] rounded-full"></div>
-
-      <nav className="fixed top-5 left-1/2 -translate-x-1/2 z-50 w-[95%] max-w-6xl">
-        <div className="backdrop-blur-2xl bg-white/5 border border-white/10 rounded-3xl px-8 py-5 flex items-center justify-between shadow-2xl">
-          <h1 className="text-3xl font-black bg-gradient-to-r from-cyan-400 to-purple-500 bg-clip-text text-transparent">
-            AI Image Tools
-          </h1>
-
-          <div className="hidden md:flex items-center gap-8 text-gray-300">
-            <a href="#tools" className="hover:text-cyan-400 transition">
-              Tools
-            </a>
-
-            <a href="#categories" className="hover:text-cyan-400 transition">
-              Categories
-            </a>
-          </div>
-
-          <a
-            href="#tools"
-            className="bg-cyan-500 hover:bg-cyan-400 transition-all duration-300 text-black px-6 py-3 rounded-2xl font-bold shadow-lg shadow-cyan-500/20"
-          >
-            Explore
-          </a>
-        </div>
-      </nav>
-
+    <>
       <section className="relative min-h-screen flex items-center px-6 pt-32">
         <div className="max-w-7xl mx-auto grid md:grid-cols-2 gap-20 items-center">
           <div>
@@ -147,9 +150,7 @@ function App() {
       </section>
 
       <section id="categories" className="relative px-8 pb-24">
-        <h3 className="text-5xl font-black text-center mb-14">
-          Categories
-        </h3>
+        <h3 className="text-5xl font-black text-center mb-14">Categories</h3>
 
         <div className="flex flex-wrap justify-center gap-5">
           {categories.map((category, index) => (
@@ -207,18 +208,134 @@ function App() {
                 {tool.description}
               </p>
 
-              <a
-                href={tool.link}
-                target="_blank"
-                rel="noreferrer"
+              <Link
+                to={`/tool/${tool.slug}`}
                 className="block text-center bg-cyan-500 hover:bg-cyan-400 transition-all duration-300 text-black py-4 rounded-2xl font-bold text-lg hover:scale-105"
               >
-                Visit Tool
-              </a>
+                View Details
+              </Link>
             </div>
           ))}
         </div>
       </section>
+    </>
+  )
+}
+
+function ToolDetailPage() {
+  const { slug } = useParams()
+  const tool = tools.find((item) => item.slug === slug)
+
+  if (!tool) {
+    return (
+      <section className="min-h-screen flex items-center justify-center px-6">
+        <div className="text-center">
+          <h2 className="text-5xl font-black mb-6">Tool Not Found</h2>
+          <Link
+            to="/"
+            className="inline-block bg-cyan-500 text-black px-8 py-4 rounded-2xl font-bold"
+          >
+            Back Home
+          </Link>
+        </div>
+      </section>
+    )
+  }
+
+  return (
+    <section className="min-h-screen px-6 pt-40 pb-24">
+      <div className="max-w-5xl mx-auto bg-white/5 border border-white/10 rounded-[40px] p-10 md:p-14 backdrop-blur-2xl">
+        <Link to="/" className="text-cyan-400 font-semibold">
+          ← Back to all tools
+        </Link>
+
+        <div className="grid md:grid-cols-[140px_1fr] gap-10 mt-10 items-start">
+          <div className="w-32 h-32 bg-white rounded-3xl p-5 flex items-center justify-center">
+            <img
+              src={tool.image}
+              alt={tool.name}
+              className="w-full h-full object-contain"
+            />
+          </div>
+
+          <div>
+            <p className="text-cyan-400 font-semibold mb-3">
+              {tool.category}
+            </p>
+
+            <h1 className="text-5xl md:text-7xl font-black mb-6">
+              {tool.name}
+            </h1>
+
+            <p className="text-gray-300 text-xl leading-relaxed mb-8">
+              {tool.fullDescription}
+            </p>
+
+            <div className="grid md:grid-cols-2 gap-5 mb-10">
+              <div className="bg-black/30 border border-white/10 rounded-3xl p-6">
+                <p className="text-gray-500 mb-2">Pricing</p>
+                <p className="text-2xl font-bold">{tool.pricing}</p>
+              </div>
+
+              <div className="bg-black/30 border border-white/10 rounded-3xl p-6">
+                <p className="text-gray-500 mb-2">Best For</p>
+                <p className="text-2xl font-bold">{tool.bestFor}</p>
+              </div>
+            </div>
+
+            <a
+              href={tool.link}
+              target="_blank"
+              rel="noreferrer"
+              className="inline-block bg-cyan-500 hover:bg-cyan-400 transition-all duration-300 text-black px-8 py-4 rounded-2xl font-bold text-lg"
+            >
+              Visit Official Website
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+  )
+}
+
+function Layout() {
+  return (
+    <div className="min-h-screen bg-black text-white overflow-hidden scroll-smooth">
+      <div className="absolute top-0 left-0 w-[600px] h-[600px] bg-cyan-500/20 blur-[160px] rounded-full"></div>
+      <div className="absolute bottom-0 right-0 w-[600px] h-[600px] bg-purple-500/20 blur-[160px] rounded-full"></div>
+
+      <nav className="fixed top-5 left-1/2 -translate-x-1/2 z-50 w-[95%] max-w-6xl">
+        <div className="backdrop-blur-2xl bg-white/5 border border-white/10 rounded-3xl px-8 py-5 flex items-center justify-between shadow-2xl">
+          <Link
+            to="/"
+            className="text-3xl font-black bg-gradient-to-r from-cyan-400 to-purple-500 bg-clip-text text-transparent"
+          >
+            AI Image Tools
+          </Link>
+
+          <div className="hidden md:flex items-center gap-8 text-gray-300">
+            <Link to="/" className="hover:text-cyan-400 transition">
+              Home
+            </Link>
+
+            <a href="/#tools" className="hover:text-cyan-400 transition">
+              Tools
+            </a>
+          </div>
+
+          <a
+            href="/#tools"
+            className="bg-cyan-500 hover:bg-cyan-400 transition-all duration-300 text-black px-6 py-3 rounded-2xl font-bold shadow-lg shadow-cyan-500/20"
+          >
+            Explore
+          </a>
+        </div>
+      </nav>
+
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/tool/:slug" element={<ToolDetailPage />} />
+      </Routes>
 
       <footer className="border-t border-white/10 py-10 text-center text-gray-500">
         © 2026 AI Image Tools — Premium AI Discovery Platform
@@ -227,4 +344,6 @@ function App() {
   )
 }
 
-export default App
+export default function App() {
+  return <Layout />
+}
