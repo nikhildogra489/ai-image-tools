@@ -105,9 +105,19 @@ function HomePage() {
                   />
                 </div>
 
-                <p className="text-cyan-400 font-semibold mb-3">
-                  {tool.category}
-                </p>
+                <div className="flex items-center gap-3 mb-4 flex-wrap">
+                  <span className="bg-cyan-500/10 text-cyan-400 px-4 py-2 rounded-full text-sm font-semibold border border-cyan-500/20">
+                    {tool.category}
+                  </span>
+
+                  <span className="bg-yellow-500/10 text-yellow-400 px-4 py-2 rounded-full text-sm font-semibold border border-yellow-500/20">
+                    ⭐ {tool.rating}
+                  </span>
+
+                  <span className="bg-purple-500/10 text-purple-400 px-4 py-2 rounded-full text-sm font-semibold border border-purple-500/20">
+                    👥 {tool.users}
+                  </span>
+                </div>
 
                 <h4 className="text-3xl font-black mb-4">{tool.name}</h4>
 
@@ -157,7 +167,7 @@ function HomePage() {
             type="text"
             placeholder="Search AI tools..."
             value={search}
-            onChange={(e) => setSearch(e.target.value)}
+            onChange={(event) => setSearch(event.target.value)}
             className="w-full bg-white/5 backdrop-blur-2xl border border-white/10 focus:border-cyan-400 outline-none px-6 py-5 rounded-2xl text-white text-lg"
           />
         </div>
@@ -178,9 +188,19 @@ function HomePage() {
 
               <h4 className="text-3xl font-black mb-3">{tool.name}</h4>
 
-              <p className="text-cyan-400 font-semibold mb-4">
-                {tool.category}
-              </p>
+              <div className="flex items-center gap-3 mb-4 flex-wrap">
+                <span className="bg-cyan-500/10 text-cyan-400 px-4 py-2 rounded-full text-sm font-semibold border border-cyan-500/20">
+                  {tool.category}
+                </span>
+
+                <span className="bg-yellow-500/10 text-yellow-400 px-4 py-2 rounded-full text-sm font-semibold border border-yellow-500/20">
+                  ⭐ {tool.rating}
+                </span>
+
+                <span className="bg-purple-500/10 text-purple-400 px-4 py-2 rounded-full text-sm font-semibold border border-purple-500/20">
+                  👥 {tool.users}
+                </span>
+              </div>
 
               <p className="text-gray-400 leading-relaxed mb-8">
                 {tool.description}
@@ -237,9 +257,19 @@ function ToolDetailPage() {
           </div>
 
           <div>
-            <p className="text-cyan-400 font-semibold mb-3">
-              {tool.category}
-            </p>
+            <div className="flex items-center gap-3 mb-5 flex-wrap">
+              <span className="bg-cyan-500/10 text-cyan-400 px-4 py-2 rounded-full text-sm font-semibold border border-cyan-500/20">
+                {tool.category}
+              </span>
+
+              <span className="bg-yellow-500/10 text-yellow-400 px-4 py-2 rounded-full text-sm font-semibold border border-yellow-500/20">
+                ⭐ {tool.rating}
+              </span>
+
+              <span className="bg-purple-500/10 text-purple-400 px-4 py-2 rounded-full text-sm font-semibold border border-purple-500/20">
+                👥 {tool.users}
+              </span>
+            </div>
 
             <h1 className="text-5xl md:text-7xl font-black mb-6">
               {tool.name}
