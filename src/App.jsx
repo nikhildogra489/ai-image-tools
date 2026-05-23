@@ -16,6 +16,8 @@ function HomePage() {
     "AI Generator",
   ]
 
+  const featuredTools = tools.slice(0, 3)
+
   const filteredTools = tools.filter((tool) => {
     const matchesSearch =
       tool.name.toLowerCase().includes(search.toLowerCase()) ||
@@ -48,12 +50,19 @@ function HomePage() {
               logo makers, and next-generation design tools.
             </p>
 
-            <div className="mt-12">
+            <div className="mt-12 flex flex-wrap gap-5">
               <a
-                href="#tools"
+                href="#featured"
                 className="bg-cyan-500 hover:bg-cyan-400 transition-all duration-300 text-black px-8 py-4 rounded-2xl font-bold text-lg shadow-lg shadow-cyan-500/30 hover:scale-105 inline-block"
               >
-                Start Exploring
+                View Featured Tools
+              </a>
+
+              <a
+                href="#tools"
+                className="border border-white/10 hover:border-cyan-400 transition-all duration-300 px-8 py-4 rounded-2xl font-bold text-lg hover:scale-105 inline-block"
+              >
+                Browse All Tools
               </a>
             </div>
           </div>
@@ -64,6 +73,56 @@ function HomePage() {
             <div className="relative w-[320px] h-[320px] bg-white/5 border border-white/10 rounded-[40px] backdrop-blur-2xl flex items-center justify-center text-8xl shadow-2xl">
               🤖
             </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="featured" className="relative px-8 pb-24">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-14">
+            <p className="text-cyan-400 font-bold mb-3">EDITOR PICKS</p>
+            <h3 className="text-5xl font-black">Featured AI Tools</h3>
+            <p className="text-gray-400 mt-5 text-lg">
+              Our top selected AI tools for creators, designers, and businesses.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-8">
+            {featuredTools.map((tool, index) => (
+              <div
+                key={tool.slug}
+                className="relative bg-gradient-to-br from-cyan-500/10 to-purple-500/10 border border-cyan-400/30 rounded-[36px] p-8 hover:-translate-y-4 transition-all duration-500 shadow-2xl shadow-cyan-500/10"
+              >
+                <div className="absolute top-6 right-6 bg-cyan-500 text-black px-4 py-2 rounded-full text-sm font-black">
+                  Top #{index + 1}
+                </div>
+
+                <div className="w-24 h-24 bg-white rounded-3xl p-4 flex items-center justify-center mb-7">
+                  <img
+                    src={tool.image}
+                    alt={tool.name}
+                    className="w-full h-full object-contain"
+                  />
+                </div>
+
+                <p className="text-cyan-400 font-semibold mb-3">
+                  {tool.category}
+                </p>
+
+                <h4 className="text-3xl font-black mb-4">{tool.name}</h4>
+
+                <p className="text-gray-400 leading-relaxed mb-8">
+                  {tool.description}
+                </p>
+
+                <Link
+                  to={`/tool/${tool.slug}`}
+                  className="block text-center bg-cyan-500 hover:bg-cyan-400 transition-all duration-300 text-black py-4 rounded-2xl font-bold text-lg"
+                >
+                  View Tool
+                </Link>
+              </div>
+            ))}
           </div>
         </div>
       </section>
@@ -233,9 +292,9 @@ function Layout() {
           </Link>
 
           <div className="hidden md:flex items-center gap-8 text-gray-300">
-            <Link to="/" className="hover:text-cyan-400 transition">
-              Home
-            </Link>
+            <a href="/#featured" className="hover:text-cyan-400 transition">
+              Featured
+            </a>
 
             <a href="/#tools" className="hover:text-cyan-400 transition">
               Tools
