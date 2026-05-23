@@ -1,5 +1,7 @@
 import { useState } from "react"
 import { Routes, Route, Link, useParams } from "react-router-dom"
+import { collection, addDoc, serverTimestamp } from "firebase/firestore"
+import { db } from "./firebase"
 import tools from "./data/tools"
 
 function HomePage() {
@@ -89,7 +91,11 @@ function HomePage() {
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-14">
             <p className="text-cyan-400 font-bold mb-3">EDITOR PICKS</p>
-            <h3 className="text-5xl font-black">Featured AI Tools</h3>
+
+            <h3 className="text-5xl font-black">
+              Featured AI Tools
+            </h3>
+
             <p className="text-gray-400 mt-5 text-lg">
               Our top selected AI tools for creators, designers, and businesses.
             </p>
@@ -97,14 +103,21 @@ function HomePage() {
 
           <div className="grid md:grid-cols-3 gap-8">
             {featuredTools.map((tool, index) => (
-              <ToolCard key={tool.slug} tool={tool} featured index={index} />
+              <ToolCard
+                key={tool.slug}
+                tool={tool}
+                featured
+                index={index}
+              />
             ))}
           </div>
         </div>
       </section>
 
       <section id="categories" className="relative px-8 pb-24">
-        <h3 className="text-5xl font-black text-center mb-14">Categories</h3>
+        <h3 className="text-5xl font-black text-center mb-14">
+          Categories
+        </h3>
 
         <div className="flex flex-wrap justify-center gap-5">
           {categories.map((category) => (
@@ -163,13 +176,18 @@ function HomePage() {
         <div className="grid md:grid-cols-3 gap-8 max-w-7xl mx-auto">
           {filteredTools.length === 0 ? (
             <div className="col-span-full text-center py-20">
-              <h4 className="text-4xl font-black mb-4">No AI Tools Found</h4>
+              <h4 className="text-4xl font-black mb-4">
+                No AI Tools Found
+              </h4>
+
               <p className="text-gray-400 text-lg">
                 Try searching for another keyword.
               </p>
             </div>
           ) : (
-            filteredTools.map((tool) => <ToolCard key={tool.slug} tool={tool} />)
+            filteredTools.map((tool) => (
+              <ToolCard key={tool.slug} tool={tool} />
+            ))
           )}
         </div>
       </section>
@@ -183,7 +201,10 @@ function StatCard({ value, label }) {
       <h3 className="text-6xl font-black bg-gradient-to-r from-cyan-400 to-purple-500 bg-clip-text text-transparent mb-4">
         {value}
       </h3>
-      <p className="text-gray-400 text-xl">{label}</p>
+
+      <p className="text-gray-400 text-xl">
+        {label}
+      </p>
     </div>
   )
 }
@@ -211,7 +232,9 @@ function ToolCard({ tool, featured = false, index = 0 }) {
         />
       </div>
 
-      <h4 className="text-3xl font-black mb-3">{tool.name}</h4>
+      <h4 className="text-3xl font-black mb-3">
+        {tool.name}
+      </h4>
 
       <div className="flex items-center gap-3 mb-4 flex-wrap">
         <span className="bg-cyan-500/10 text-cyan-400 px-4 py-2 rounded-full text-sm font-semibold border border-cyan-500/20">
@@ -227,7 +250,9 @@ function ToolCard({ tool, featured = false, index = 0 }) {
         </span>
       </div>
 
-      <p className="text-gray-400 leading-relaxed mb-8">{tool.description}</p>
+      <p className="text-gray-400 leading-relaxed mb-8">
+        {tool.description}
+      </p>
 
       <Link
         to={`/tool/${tool.slug}`}
@@ -241,13 +266,16 @@ function ToolCard({ tool, featured = false, index = 0 }) {
 
 function ToolDetailPage() {
   const { slug } = useParams()
+
   const tool = tools.find((item) => item.slug === slug)
 
   if (!tool) {
     return (
       <section className="min-h-screen flex items-center justify-center px-6">
         <div className="text-center">
-          <h2 className="text-5xl font-black mb-6">Tool Not Found</h2>
+          <h2 className="text-5xl font-black mb-6">
+            Tool Not Found
+          </h2>
 
           <Link
             to="/"
@@ -301,13 +329,23 @@ function ToolDetailPage() {
 
             <div className="grid md:grid-cols-2 gap-5 mb-10">
               <div className="bg-black/30 border border-white/10 rounded-3xl p-6">
-                <p className="text-gray-500 mb-2">Pricing</p>
-                <p className="text-2xl font-bold">{tool.pricing}</p>
+                <p className="text-gray-500 mb-2">
+                  Pricing
+                </p>
+
+                <p className="text-2xl font-bold">
+                  {tool.pricing}
+                </p>
               </div>
 
               <div className="bg-black/30 border border-white/10 rounded-3xl p-6">
-                <p className="text-gray-500 mb-2">Best For</p>
-                <p className="text-2xl font-bold">{tool.bestFor}</p>
+                <p className="text-gray-500 mb-2">
+                  Best For
+                </p>
+
+                <p className="text-2xl font-bold">
+                  {tool.bestFor}
+                </p>
               </div>
             </div>
 
@@ -330,7 +368,7 @@ function Footer() {
   const [email, setEmail] = useState("")
   const [message, setMessage] = useState("")
 
-  const handleSubscribe = (event) => {
+  const handleSubscribe = async (event) => {
     event.preventDefault()
 
     if (!email.includes("@") || !email.includes(".")) {
@@ -338,8 +376,18 @@ function Footer() {
       return
     }
 
-    setMessage("Subscribed successfully! Weekly AI updates will be sent soon.")
-    setEmail("")
+    try {
+      await addDoc(collection(db, "newsletterSubscribers"), {
+        email: email,
+        createdAt: serverTimestamp(),
+      })
+
+      setMessage("Subscribed successfully! Your email has been saved.")
+      setEmail("")
+    } catch (error) {
+      setMessage("Something went wrong. Please try again.")
+      console.error(error)
+    }
   }
 
   return (
@@ -356,8 +404,8 @@ function Footer() {
             </h3>
 
             <p className="text-gray-400 text-xl leading-relaxed mb-10">
-              Discover trending AI tools, generators, design apps, and powerful
-              creator platforms every week.
+              Discover trending AI tools, generators, design apps,
+              and powerful creator platforms every week.
             </p>
 
             <form
@@ -381,72 +429,10 @@ function Footer() {
             </form>
 
             {message && (
-              <p className="mt-5 text-cyan-400 font-semibold">{message}</p>
+              <p className="mt-5 text-cyan-400 font-semibold">
+                {message}
+              </p>
             )}
-          </div>
-        </div>
-
-        <div className="grid md:grid-cols-4 gap-12">
-          <div>
-            <h4 className="text-3xl font-black bg-gradient-to-r from-cyan-400 to-purple-500 bg-clip-text text-transparent mb-6">
-              AI Image Tools
-            </h4>
-
-            <p className="text-gray-400 leading-relaxed">
-              Discover the best AI image generators, editors, design platforms,
-              and creative tools in one place.
-            </p>
-          </div>
-
-          <div>
-            <h5 className="text-xl font-bold mb-6">Categories</h5>
-
-            <div className="flex flex-col gap-4 text-gray-400">
-              <a href="/#tools" className="hover:text-cyan-400 transition">
-                AI Generators
-              </a>
-              <a href="/#tools" className="hover:text-cyan-400 transition">
-                AI Editors
-              </a>
-              <a href="/#tools" className="hover:text-cyan-400 transition">
-                AI Art
-              </a>
-              <a href="/#tools" className="hover:text-cyan-400 transition">
-                AI Design
-              </a>
-            </div>
-          </div>
-
-          <div>
-            <h5 className="text-xl font-bold mb-6">Quick Links</h5>
-
-            <div className="flex flex-col gap-4 text-gray-400">
-              <a href="/#featured" className="hover:text-cyan-400 transition">
-                Featured Tools
-              </a>
-              <a href="/#tools" className="hover:text-cyan-400 transition">
-                Trending Tools
-              </a>
-              <a href="/" className="hover:text-cyan-400 transition">
-                Home
-              </a>
-            </div>
-          </div>
-
-          <div>
-            <h5 className="text-xl font-bold mb-6">Follow Us</h5>
-
-            <div className="flex gap-4 flex-wrap">
-              <div className="w-14 h-14 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center hover:border-cyan-400 transition-all duration-300 cursor-pointer text-2xl">
-                🐦
-              </div>
-              <div className="w-14 h-14 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center hover:border-cyan-400 transition-all duration-300 cursor-pointer text-2xl">
-                📸
-              </div>
-              <div className="w-14 h-14 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center hover:border-cyan-400 transition-all duration-300 cursor-pointer text-2xl">
-                💼
-              </div>
-            </div>
           </div>
         </div>
 
@@ -462,6 +448,7 @@ function Layout() {
   return (
     <div className="min-h-screen bg-black text-white overflow-hidden scroll-smooth">
       <div className="absolute top-0 left-0 w-[600px] h-[600px] bg-cyan-500/20 blur-[160px] rounded-full"></div>
+
       <div className="absolute bottom-0 right-0 w-[600px] h-[600px] bg-purple-500/20 blur-[160px] rounded-full"></div>
 
       <nav className="fixed top-5 left-1/2 -translate-x-1/2 z-50 w-[95%] max-w-6xl">
