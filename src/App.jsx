@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react"
-import { Routes, Route, Link, useParams } from "react-router-dom"
+import { Routes, Route, Link, useParams, Navigate, useNavigate } from "react-router-dom"
 import { collection, addDoc, serverTimestamp, getDocs } from "firebase/firestore"
+import { signInWithEmailAndPassword, signOut, onAuthStateChanged } from "firebase/auth"
 
-import { db } from "./firebase"
+import { db, auth } from "./firebase"
 import tools from "./data/tools"
 
 function HomePage() {
@@ -248,7 +249,74 @@ function ToolDetailPage() {
   )
 }
 
-function AdminPage() {
+function LoginPage({ user }) {
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
+  const [error, setError] = useState("")
+  const navigate = useNavigate()
+
+  if (user) {
+    return <Navigate to="/admin" />
+  }
+
+  const handleLogin = async (event) => {
+    event.preventDefault()
+    setError("")
+
+    try {
+      await signInWithEmailAndPassword(auth, email, password)
+      navigate("/admin")
+    } catch (error) {
+      console.error(error)
+      setError("Invalid email or password.")
+    }
+  }
+
+  return (
+    <section className="min-h-screen flex items-center justify-center px-6 pt-32">
+      <div className="w-full max-w-md bg-white/5 border border-white/10 rounded-[36px] p-8 backdrop-blur-2xl">
+        <h1 className="text-4xl font-black mb-3">Admin Login</h1>
+
+        <p className="text-gray-400 mb-8">
+          Login to access the private admin dashboard.
+        </p>
+
+        <form onSubmit={handleLogin} className="space-y-5">
+          <input
+            type="email"
+            placeholder="Admin email"
+            value={email}
+            onChange={(event) => setEmail(event.target.value)}
+            className="w-full bg-black/30 border border-white/10 focus:border-cyan-400 outline-none px-5 py-4 rounded-2xl text-white"
+          />
+
+          <input
+            type="password"
+            placeholder="Admin password"
+            value={password}
+            onChange={(event) => setPassword(event.target.value)}
+            className="w-full bg-black/30 border border-white/10 focus:border-cyan-400 outline-none px-5 py-4 rounded-2xl text-white"
+          />
+
+          {error && (
+            <p className="text-red-400 font-semibold">
+              {error}
+            </p>
+          )}
+
+          <button
+            type="submit"
+            className="w-full bg-cyan-500 hover:bg-cyan-400 text-black px-6 py-4 rounded-2xl font-bold transition-all duration-300"
+          >
+            Login
+          </button>
+        </form>
+      </div>
+    </section>
+  )
+}
+
+function AdminPage({ user }) {
   const [subscribers, setSubscribers] = useState([])
   const [loading, setLoading] = useState(true)
 
@@ -275,14 +343,33 @@ function AdminPage() {
     }
   }
 
+  const handleLogout = async () => {
+    await signOut(auth)
+  }
+
+  if (!user) {
+    return <Navigate to="/login" />
+  }
+
   return (
     <section className="min-h-screen px-6 pt-40 pb-24">
       <div className="max-w-6xl mx-auto">
-        <h1 className="text-6xl font-black mb-6">Admin Dashboard</h1>
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6 mb-12">
+          <div>
+            <h1 className="text-6xl font-black mb-4">Admin Dashboard</h1>
 
-        <p className="text-gray-400 text-xl mb-12">
-          Newsletter Subscribers
-        </p>
+            <p className="text-gray-400 text-xl">
+              Newsletter Subscribers
+            </p>
+          </div>
+
+          <button
+            onClick={handleLogout}
+            className="bg-red-500 hover:bg-red-400 text-white px-6 py-4 rounded-2xl font-bold transition-all duration-300"
+          >
+            Logout
+          </button>
+        </div>
 
         {loading ? (
           <div className="text-cyan-400 text-xl">Loading subscribers...</div>
@@ -375,6 +462,26 @@ function Footer() {
 }
 
 function Layout() {
+  const [user, setUser] = useState(null)
+  const [authLoading, setAuthLoading] = useState(true)
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser)
+      setAuthLoading(false)
+    })
+
+    return () => unsubscribe()
+  }, [])
+
+  if (authLoading) {
+    return (
+      <div className="min-h-screen bg-black text-white flex items-center justify-center">
+        <p className="text-cyan-400 text-xl">Loading...</p>
+      </div>
+    )
+  }
+
   return (
     <div className="min-h-screen bg-black text-white overflow-hidden">
       <nav className="fixed top-5 left-1/2 -translate-x-1/2 z-50 w-[95%] max-w-6xl">
@@ -397,7 +504,8 @@ function Layout() {
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/tool/:slug" element={<ToolDetailPage />} />
-        <Route path="/admin" element={<AdminPage />} />
+        <Route path="/login" element={<LoginPage user={user} />} />
+        <Route path="/admin" element={<AdminPage user={user} />} />
       </Routes>
 
       <Footer />
