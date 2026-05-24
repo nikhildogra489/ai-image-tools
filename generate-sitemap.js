@@ -1,6 +1,6 @@
 import fs from "fs"
 
-const siteUrl = "https://ai-image-tools.vercel.app"
+const siteUrl = "https://ai-image-tools-4cns.vercel.app"
 
 const staticPages = [
   "",
