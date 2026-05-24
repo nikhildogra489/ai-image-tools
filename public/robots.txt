@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://ai-image-tools-4cns.vercel.app/sitemap.xml
