@@ -6,6 +6,7 @@ import {
   useParams,
   Navigate,
   useNavigate,
+  useLocation,
 } from "react-router-dom"
 
 import {
@@ -546,8 +547,15 @@ function ToolDetailPage() {
   }, [])
 
   const loadTools = async () => {
-   
+  try {
+    const fetchedTools = await fetchFirebaseTools()
+    setFirebaseTools(fetchedTools)
+  } catch (error) {
+    console.error(error)
+  } finally {
+    setLoadingTools(false)
   }
+}
 
   const staticTools = toolsData.map((tool) => ({
     ...tool,
@@ -1314,7 +1322,15 @@ function Footer() {
     </footer>
   )
 }
+function ScrollToTop() {
+  const { pathname } = useLocation()
 
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [pathname])
+
+  return null
+}
 function Layout() {
   const [user, setUser] = useState(null)
   const [authLoading, setAuthLoading] = useState(true)
@@ -1357,6 +1373,7 @@ function Layout() {
           </div>
         </div>
       </nav>
+      <ScrollToTop />
 
       <Routes>
         <Route path="/" element={<HomePage />} />
