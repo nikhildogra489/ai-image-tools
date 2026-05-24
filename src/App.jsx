@@ -27,6 +27,10 @@ import {
 
 import { db, auth } from "./firebase"
 import toolsData from "./data/tools"
+import AboutPage from "./AboutPage"
+import PrivacyPage from "./PrivacyPage"
+import TermsPage from "./TermsPage"
+import ContactPage from "./ContactPage"
 import { Helmet, HelmetProvider } from "react-helmet-async"
 
 function slugify(text) {
@@ -1280,6 +1284,23 @@ function Footer() {
         </div>
 
         <div className="border-t border-white/10 pt-8 text-center text-gray-500">
+        <div className="flex flex-wrap justify-center gap-6 mb-8 text-gray-400">
+  <Link to="/about" className="hover:text-cyan-400 transition">
+    About
+  </Link>
+
+  <Link to="/privacy" className="hover:text-cyan-400 transition">
+    Privacy
+  </Link>
+
+  <Link to="/terms" className="hover:text-cyan-400 transition">
+    Terms
+  </Link>
+
+  <Link to="/contact" className="hover:text-cyan-400 transition">
+    Contact
+  </Link>
+</div>
           © 2026 AI Image Tools — All Rights Reserved
         </div>
       </div>
@@ -1335,6 +1356,10 @@ function Layout() {
         <Route path="/tool/:slug" element={<ToolDetailPage />} />
         <Route path="/login" element={<LoginPage user={user} />} />
         <Route path="/admin" element={<AdminPage user={user} />} />
+        <Route path="/about" element={<AboutPage />} />
+<Route path="/privacy" element={<PrivacyPage />} />
+<Route path="/terms" element={<TermsPage />} />
+<Route path="/contact" element={<ContactPage />} />
       </Routes>
 
       <Footer />
