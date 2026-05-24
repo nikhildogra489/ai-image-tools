@@ -324,10 +324,13 @@ function ToolCard({ tool, featured = false, index = 0 }) {
 
       <div className="w-24 h-24 bg-white rounded-3xl p-4 flex items-center justify-center mb-6">
         <img
-          src={tool.image || getFallbackImage(tool.name)}
-          alt={tool.name}
-          className="w-full h-full object-contain"
-        />
+  src={tool.image || getFallbackImage(tool.name)}
+  alt={tool.name}
+  onError={(event) => {
+    event.currentTarget.src = getFallbackImage(tool.name)
+  }}
+  className="w-full h-full object-contain"
+/>
       </div>
 
       <h3 className="text-3xl font-black mb-3">
