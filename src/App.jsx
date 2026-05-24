@@ -15,6 +15,7 @@ import {
   deleteDoc,
   doc,
   updateDoc,
+  increment,
   serverTimestamp,
 } from "firebase/firestore"
 
@@ -64,6 +65,7 @@ function normalizeFirebaseTool(item) {
     pricing: data.pricing || "Free + Paid",
     rating: data.rating || "4.5",
     users: data.users || "New",
+    clicks: data.clicks || 0,
     bestFor: data.bestFor || data.category || "AI creators",
   }
 }
@@ -106,7 +108,9 @@ function HomePage() {
     ...new Set(allTools.map((tool) => tool.category).filter(Boolean)),
   ]
 
-  const featuredTools = allTools.slice(0, 3)
+ const featuredTools = allTools
+  .filter((tool) => tool.featured)
+  .slice(0, 3) 
 
   const filteredTools = allTools.filter((tool) => {
     const query = search.toLowerCase()
@@ -451,6 +455,11 @@ function ToolDetailPage() {
   }))
 
   const allTools = [...firebaseTools, ...staticTools]
+  allTools.sort((a, b) => {
+  if (a.featured && !b.featured) return -1
+  if (!a.featured && b.featured) return 1
+  return 0
+})
 
   const tool = allTools.find((item) => item.slug === slug)
 
@@ -510,14 +519,20 @@ function ToolDetailPage() {
               </div>
             </div>
 
-            <a
-              href={tool.affiliateLink || tool.link}
-              target="_blank"
-              rel="noreferrer"
-              className="inline-block bg-cyan-500 hover:bg-cyan-400 text-black px-8 py-5 rounded-2xl font-black text-lg transition-all duration-300 hover:scale-105"
-            >
-              Visit Official Website
-            </a>
+            <button
+  onClick={async () => {
+    if (tool.source === "firebase" && tool.id) {
+      await updateDoc(doc(db, "tools", tool.id), {
+        clicks: increment(1),
+      })
+    }
+
+    window.open(tool.affiliateLink || tool.link, "_blank")
+  }}
+  className="inline-block bg-cyan-500 hover:bg-cyan-400 text-black px-8 py-5 rounded-2xl font-black text-lg transition-all duration-300 hover:scale-105"
+>
+  Visit Official Website
+</button>
           </div>
 
           <div className="bg-white/5 border border-white/10 rounded-[40px] p-10 backdrop-blur-2xl">
@@ -611,6 +626,7 @@ function AdminPage({ user }) {
   const [toolImage, setToolImage] = useState("")
   const [toolLink, setToolLink] = useState("")
   const [affiliateLink, setAffiliateLink] = useState("")
+  const [isFeatured, setIsFeatured] = useState(false)
   const [toolPricing, setToolPricing] = useState("Free + Paid")
   const [message, setMessage] = useState("")
   const [uploading, setUploading] = useState(false)
@@ -699,6 +715,7 @@ function AdminPage({ user }) {
         link: toolLink,
         affiliateLink: affiliateLink,
         pricing: toolPricing,
+        featured: isFeatured,
         bestFor: toolCategory,
       })
 
@@ -715,8 +732,10 @@ function AdminPage({ user }) {
         link: toolLink,
         affiliateLink: affiliateLink,
         pricing: toolPricing,
+        featured: isFeatured,
         rating: "4.5",
         users: "New",
+        clicks: 0,
         bestFor: toolCategory,
         createdAt: serverTimestamp(),
       })
@@ -884,6 +903,18 @@ function AdminPage({ user }) {
                 <option>Paid</option>
                 <option>Free + Paid</option>
               </select>
+              <div className="flex items-center gap-4 bg-black/30 border border-white/10 rounded-2xl px-5 py-4">
+  <input
+    type="checkbox"
+    checked={isFeatured}
+    onChange={(event) => setIsFeatured(event.target.checked)}
+    className="h-5 w-5 accent-cyan-400"
+  />
+
+  <p className="font-semibold text-white">
+    Mark as Featured Tool
+  </p>
+</div>
 
               <button
                 type="submit"
@@ -918,9 +949,9 @@ function AdminPage({ user }) {
                       {tool.category}
                     </p>
 
-                    <p className="text-gray-500 mt-2 text-sm">
-                      {tool.link}
-                    </p>
+                    <p className="text-cyan-400 mt-2 text-sm font-bold">
+  Clicks: {tool.clicks || 0}
+</p>
 
                     <div className="flex gap-3 mt-5">
   <button
@@ -970,6 +1001,7 @@ function AdminPage({ user }) {
         </div>
       </div>
     </section>
+    
   )
 }
 
