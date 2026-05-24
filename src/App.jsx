@@ -307,70 +307,78 @@ function StatCard({ value, label }) {
     </div>
   )
 }
-
 function ToolCard({ tool, featured = false, index = 0 }) {
   return (
     <div
-      className={`relative ${
+      className={`group relative overflow-hidden rounded-[34px] border p-[1px] transition-all duration-500 hover:-translate-y-3 ${
         featured
-          ? "bg-gradient-to-br from-cyan-500/10 to-purple-500/10 border-cyan-400/30 shadow-2xl shadow-cyan-500/10"
-          : "bg-white/5 border-white/10 hover:shadow-2xl hover:shadow-cyan-500/10"
-      } backdrop-blur-2xl border hover:border-cyan-400 rounded-[32px] p-8 transition-all duration-500 hover:-translate-y-4`}
+          ? "border-cyan-400/40 bg-gradient-to-br from-cyan-400/40 via-purple-500/30 to-pink-500/30 shadow-2xl shadow-cyan-500/20"
+          : "border-white/10 bg-gradient-to-br from-white/20 via-white/5 to-transparent hover:border-cyan-400/60 hover:shadow-2xl hover:shadow-cyan-500/20"
+      }`}
     >
-      {featured && (
-        <div className="absolute top-6 right-6 bg-cyan-500 text-black px-4 py-2 rounded-full text-sm font-black">
-          Top #{index + 1}
+      <div className="relative h-full rounded-[33px] bg-slate-950/90 p-7 backdrop-blur-2xl">
+        <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition duration-500 bg-gradient-to-br from-cyan-500/10 via-purple-500/10 to-transparent" />
+
+        {featured && (
+          <div className="absolute top-5 right-5 z-10 rounded-full bg-cyan-400 px-4 py-2 text-xs font-black text-black shadow-lg shadow-cyan-400/30">
+            TOP #{index + 1}
+          </div>
+        )}
+
+        <div className="relative z-10 mb-6 flex items-center gap-5">
+          <div className="h-24 w-24 rounded-3xl bg-white p-4 shadow-xl shadow-black/30 transition duration-500 group-hover:scale-110">
+            <img
+              src={tool.image || getFallbackImage(tool.name)}
+              alt={tool.name}
+              onError={(event) => {
+                event.currentTarget.src = getFallbackImage(tool.name)
+              }}
+              className="h-full w-full object-contain"
+            />
+          </div>
+
+          <div>
+            <p className="mb-2 text-sm font-bold uppercase tracking-widest text-cyan-400">
+              {tool.category}
+            </p>
+
+            <h3 className="text-3xl font-black leading-tight text-white">
+              {tool.name}
+            </h3>
+          </div>
         </div>
-      )}
 
-      <div className="w-24 h-24 bg-white rounded-3xl p-4 flex items-center justify-center mb-6">
-        <img
-  src={tool.image || getFallbackImage(tool.name)}
-  alt={tool.name}
-  onError={(event) => {
-    event.currentTarget.src = getFallbackImage(tool.name)
-  }}
-  className="w-full h-full object-contain"
-/>
+        <div className="relative z-10 mb-5 flex flex-wrap gap-2">
+          <span className="rounded-full border border-yellow-400/20 bg-yellow-400/10 px-3 py-1 text-sm font-semibold text-yellow-300">
+            ⭐ {tool.rating}
+          </span>
+
+          <span className="rounded-full border border-purple-400/20 bg-purple-400/10 px-3 py-1 text-sm font-semibold text-purple-300">
+            👥 {tool.users}
+          </span>
+
+          <span className="rounded-full border border-green-400/20 bg-green-400/10 px-3 py-1 text-sm font-semibold text-green-300">
+            {tool.pricing}
+          </span>
+        </div>
+
+        <p className="relative z-10 mb-8 line-clamp-3 text-base leading-relaxed text-gray-400">
+          {tool.description}
+        </p>
+
+        <Link
+          to={`/tool/${tool.slug}`}
+          className="relative z-10 block rounded-2xl bg-cyan-400 px-6 py-4 text-center text-lg font-black text-black transition-all duration-300 hover:scale-105 hover:bg-cyan-300"
+        >
+          {featured ? "Explore Tool" : "View Details"}
+        </Link>
       </div>
-
-      <h3 className="text-3xl font-black mb-3">
-        {tool.name}
-      </h3>
-            <div className="flex items-center gap-3 mb-4 flex-wrap">
-        <span className="bg-cyan-500/10 text-cyan-400 px-4 py-2 rounded-full text-sm font-semibold border border-cyan-500/20">
-          {tool.category}
-        </span>
-
-        <span className="bg-yellow-500/10 text-yellow-400 px-4 py-2 rounded-full text-sm font-semibold border border-yellow-500/20">
-          ⭐ {tool.rating}
-        </span>
-
-        <span className="bg-purple-500/10 text-purple-400 px-4 py-2 rounded-full text-sm font-semibold border border-purple-500/20">
-          👥 {tool.users}
-        </span>
-
-        <span className="bg-green-500/10 text-green-400 px-4 py-2 rounded-full text-sm font-semibold border border-green-500/20">
-          {tool.pricing}
-        </span>
-      </div>
-
-      <p className="text-gray-400 leading-relaxed mb-8">
-        {tool.description}
-      </p>
-
-      <Link
-        to={`/tool/${tool.slug}`}
-        className="block text-center bg-cyan-500 hover:bg-cyan-400 transition-all duration-300 text-black py-4 rounded-2xl font-bold text-lg hover:scale-105"
-      >
-        {featured ? "View Tool" : "View Details"}
-      </Link>
     </div>
   )
 }
-
 function ToolDetailPage() {
   const { slug } = useParams()
+
   const [firebaseTools, setFirebaseTools] = useState([])
   const [loadingTools, setLoadingTools] = useState(true)
 
@@ -389,10 +397,12 @@ function ToolDetailPage() {
     }
   }
 
-  const allTools = [
-    ...firebaseTools,
-    ...toolsData.map((tool) => ({ ...tool, source: "static" })),
-  ]
+  const staticTools = toolsData.map((tool) => ({
+    ...tool,
+    source: "static",
+  }))
+
+  const allTools = [...firebaseTools, ...staticTools]
 
   const tool = allTools.find((item) => item.slug === slug)
 
@@ -412,7 +422,7 @@ function ToolDetailPage() {
 
           <Link
             to="/"
-            className="inline-block bg-cyan-500 text-black px-8 py-4 rounded-2xl font-bold"
+            className="inline-block bg-cyan-500 hover:bg-cyan-400 text-black px-8 py-4 rounded-2xl font-bold"
           >
             Back Home
           </Link>
@@ -423,56 +433,32 @@ function ToolDetailPage() {
 
   return (
     <section className="min-h-screen px-6 pt-40 pb-24">
-      <div className="max-w-5xl mx-auto bg-white/5 border border-white/10 rounded-[40px] p-10 md:p-14 backdrop-blur-2xl">
-        <Link to="/" className="text-cyan-400 font-semibold">
-          ← Back to all tools
-        </Link>
-
-        <div className="grid md:grid-cols-[140px_1fr] gap-10 mt-10 items-start">
-          <div className="w-32 h-32 bg-white rounded-3xl p-5 flex items-center justify-center">
-            <img
-              src={tool.image || getFallbackImage(tool.name)}
-              alt={tool.name}
-              className="w-full h-full object-contain"
-            />
-          </div>
-
+      <div className="max-w-6xl mx-auto">
+        <div className="grid lg:grid-cols-2 gap-16 items-center">
           <div>
-            <div className="flex items-center gap-3 mb-5 flex-wrap">
-              <span className="bg-cyan-500/10 text-cyan-400 px-4 py-2 rounded-full text-sm font-semibold border border-cyan-500/20">
-                {tool.category}
-              </span>
-
-              <span className="bg-yellow-500/10 text-yellow-400 px-4 py-2 rounded-full text-sm font-semibold border border-yellow-500/20">
-                ⭐ {tool.rating}
-              </span>
-
-              <span className="bg-purple-500/10 text-purple-400 px-4 py-2 rounded-full text-sm font-semibold border border-purple-500/20">
-                👥 {tool.users}
-              </span>
-
-              <span className="bg-green-500/10 text-green-400 px-4 py-2 rounded-full text-sm font-semibold border border-green-500/20">
-                {tool.pricing}
-              </span>
+            <div className="inline-block bg-cyan-500/10 border border-cyan-500/30 px-5 py-2 rounded-full text-cyan-300 mb-8">
+              {tool.category}
             </div>
 
-            <h1 className="text-5xl md:text-7xl font-black mb-6">
+            <h1 className="text-6xl font-black leading-tight mb-8">
               {tool.name}
             </h1>
 
-            <p className="text-gray-300 text-xl leading-relaxed mb-8">
+            <p className="text-xl text-gray-400 leading-relaxed mb-10">
               {tool.fullDescription || tool.description}
             </p>
 
-            <div className="grid md:grid-cols-2 gap-5 mb-10">
-              <div className="bg-black/30 border border-white/10 rounded-3xl p-6">
-                <p className="text-gray-500 mb-2">Pricing</p>
-                <p className="text-2xl font-bold">{tool.pricing}</p>
+            <div className="flex flex-wrap gap-4 mb-10">
+              <div className="bg-white/5 border border-white/10 px-5 py-3 rounded-2xl">
+                ⭐ {tool.rating}
               </div>
 
-              <div className="bg-black/30 border border-white/10 rounded-3xl p-6">
-                <p className="text-gray-500 mb-2">Best For</p>
-                <p className="text-2xl font-bold">{tool.bestFor}</p>
+              <div className="bg-white/5 border border-white/10 px-5 py-3 rounded-2xl">
+                👥 {tool.users}
+              </div>
+
+              <div className="bg-white/5 border border-white/10 px-5 py-3 rounded-2xl">
+                {tool.pricing}
               </div>
             </div>
 
@@ -480,17 +466,27 @@ function ToolDetailPage() {
               href={tool.link}
               target="_blank"
               rel="noreferrer"
-              className="inline-block bg-cyan-500 hover:bg-cyan-400 transition-all duration-300 text-black px-8 py-4 rounded-2xl font-bold text-lg"
+              className="inline-block bg-cyan-500 hover:bg-cyan-400 text-black px-8 py-5 rounded-2xl font-black text-lg transition-all duration-300 hover:scale-105"
             >
               Visit Official Website
             </a>
+          </div>
+
+          <div className="bg-white/5 border border-white/10 rounded-[40px] p-10 backdrop-blur-2xl">
+            <img
+              src={tool.image || getFallbackImage(tool.name)}
+              alt={tool.name}
+              onError={(event) => {
+                event.currentTarget.src = getFallbackImage(tool.name)
+              }}
+              className="w-full h-[420px] object-contain"
+            />
           </div>
         </div>
       </div>
     </section>
   )
 }
-
 function LoginPage({ user }) {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
@@ -568,6 +564,7 @@ function AdminPage({ user }) {
   const [toolLink, setToolLink] = useState("")
   const [toolPricing, setToolPricing] = useState("Free + Paid")
   const [message, setMessage] = useState("")
+  const [uploading, setUploading] = useState(false)
   const [editingToolId, setEditingToolId] = useState(null)
 
   useEffect(() => {
@@ -600,6 +597,37 @@ function AdminPage({ user }) {
       console.error(error)
     }
   }
+ const handleImageUpload = async (event) => {
+  const file = event.target.files[0]
+
+  if (!file) return
+
+  setUploading(true)
+
+  const formData = new FormData()
+  formData.append("file", file)
+  formData.append("upload_preset", "ai-tools-upload")
+
+  try {
+    const response = await fetch(
+      "https://api.cloudinary.com/v1_1/dshoaekpd/image/upload",
+      {
+        method: "POST",
+        body: formData,
+      }
+    )
+
+    const data = await response.json()
+
+    setToolImage(data.secure_url)
+    setMessage("Image uploaded successfully!")
+  } catch (error) {
+    console.error(error)
+    setMessage("Image upload failed.")
+  } finally {
+    setUploading(false)
+  }
+}
 
   const handleAddTool = async (event) => {
   event.preventDefault()
@@ -752,13 +780,34 @@ function AdminPage({ user }) {
                 className="w-full bg-black/30 border border-white/10 focus:border-cyan-400 outline-none px-5 py-4 rounded-2xl text-white h-32"
               />
 
-              <input
-                type="text"
-                placeholder="Image URL optional"
-                value={toolImage}
-                onChange={(event) => setToolImage(event.target.value)}
-                className="w-full bg-black/30 border border-white/10 focus:border-cyan-400 outline-none px-5 py-4 rounded-2xl text-white"
-              />
+             <div className="space-y-3">
+  <input
+    type="text"
+    placeholder="Image URL optional"
+    value={toolImage}
+    onChange={(event) => setToolImage(event.target.value)}
+    className="w-full bg-black/30 border border-white/10 focus:border-cyan-400 outline-none px-5 py-4 rounded-2xl text-white"
+  />
+
+  <input
+    type="file"
+    accept="image/*"
+    onChange={handleImageUpload}
+    className="w-full bg-black/30 border border-white/10 px-5 py-4 rounded-2xl text-white"
+  />
+
+  {uploading && (
+    <p className="text-cyan-400 font-semibold">Uploading image...</p>
+  )}
+
+  {toolImage && (
+    <img
+      src={toolImage}
+      alt="Tool preview"
+      className="w-24 h-24 object-contain bg-white rounded-2xl p-3"
+    />
+  )}
+</div>
 
               <input
                 type="text"
