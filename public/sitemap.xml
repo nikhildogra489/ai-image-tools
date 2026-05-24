@@ -1,10 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
   <url>
-    <loc>https://ai-image-tools-4cns.vercel.app/</loc>
-    <priority>1.0</priority>
+    <loc>https://ai-image-tools.vercel.app</loc>
   </url>
-
+  <url>
+    <loc>https://ai-image-tools.vercel.app/tool/chatgpt</loc>
+  </url>
+  <url>
+    <loc>https://ai-image-tools.vercel.app/tool/midjourney</loc>
+  </url>
+  <url>
+    <loc>https://ai-image-tools.vercel.app/tool/leonardo-ai</loc>
+  </url>
+  <url>
+    <loc>https://ai-image-tools.vercel.app/tool/canva-ai</loc>
+  </url>
 </urlset>

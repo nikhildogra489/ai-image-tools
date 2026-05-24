@@ -27,6 +27,7 @@ import {
 
 import { db, auth } from "./firebase"
 import toolsData from "./data/tools"
+import { Helmet, HelmetProvider } from "react-helmet-async"
 
 function slugify(text) {
   return text
@@ -79,7 +80,13 @@ function HomePage() {
   const [search, setSearch] = useState("")
   const [selectedCategory, setSelectedCategory] = useState("All")
   const [firebaseTools, setFirebaseTools] = useState([])
+  const [toolSubmissions, setToolSubmissions] = useState([])
   const [loadingTools, setLoadingTools] = useState(true)
+  const [submitName, setSubmitName] = useState("")
+const [submitCategory, setSubmitCategory] = useState("")
+const [submitDescription, setSubmitDescription] = useState("")
+const [submitLink, setSubmitLink] = useState("")
+const [submitMessage, setSubmitMessage] = useState("")
 
   useEffect(() => {
     loadTools()
@@ -110,7 +117,40 @@ function HomePage() {
 
  const featuredTools = allTools
   .filter((tool) => tool.featured)
-  .slice(0, 3) 
+  .slice(0, 3)
+  const handleSubmitTool = async (event) => {
+  event.preventDefault()
+
+  if (
+    !submitName ||
+    !submitCategory ||
+    !submitDescription ||
+    !submitLink
+  ) {
+    setSubmitMessage("Please fill all fields.")
+    return
+  }
+
+  try {
+    await addDoc(collection(db, "toolSubmissions"), {
+      name: submitName,
+      category: submitCategory,
+      description: submitDescription,
+      link: submitLink,
+      createdAt: serverTimestamp(),
+    })
+
+    setSubmitMessage("Tool submitted successfully!")
+
+    setSubmitName("")
+    setSubmitCategory("")
+    setSubmitDescription("")
+    setSubmitLink("")
+  } catch (error) {
+    console.error(error)
+    setSubmitMessage("Something went wrong.")
+  }
+} 
 
   const filteredTools = allTools.filter((tool) => {
     const query = search.toLowerCase()
@@ -342,6 +382,69 @@ function HomePage() {
     </div>
   )}
 </section>
+<section className="relative px-8 pb-24">
+  <div className="max-w-3xl mx-auto bg-white/5 border border-white/10 rounded-[36px] p-10 backdrop-blur-2xl">
+    <div className="text-center mb-10">
+      <p className="text-cyan-400 font-bold mb-3">
+        COMMUNITY SUBMISSIONS
+      </p>
+
+      <h2 className="text-5xl font-black mb-4">
+        Submit Your AI Tool
+      </h2>
+
+      <p className="text-gray-400 text-lg">
+        Share your AI tool with creators and businesses.
+      </p>
+    </div>
+
+    <form onSubmit={handleSubmitTool} className="space-y-5">
+      <input
+        type="text"
+        placeholder="Tool Name"
+        value={submitName}
+        onChange={(event) => setSubmitName(event.target.value)}
+        className="w-full bg-black/30 border border-white/10 focus:border-cyan-400 outline-none px-5 py-4 rounded-2xl text-white"
+      />
+
+      <input
+        type="text"
+        placeholder="Category"
+        value={submitCategory}
+        onChange={(event) => setSubmitCategory(event.target.value)}
+        className="w-full bg-black/30 border border-white/10 focus:border-cyan-400 outline-none px-5 py-4 rounded-2xl text-white"
+      />
+
+      <textarea
+        placeholder="Description"
+        value={submitDescription}
+        onChange={(event) => setSubmitDescription(event.target.value)}
+        className="w-full bg-black/30 border border-white/10 focus:border-cyan-400 outline-none px-5 py-4 rounded-2xl text-white h-32"
+      />
+
+      <input
+        type="text"
+        placeholder="Official Tool Link"
+        value={submitLink}
+        onChange={(event) => setSubmitLink(event.target.value)}
+        className="w-full bg-black/30 border border-white/10 focus:border-cyan-400 outline-none px-5 py-4 rounded-2xl text-white"
+      />
+
+      <button
+        type="submit"
+        className="w-full bg-cyan-500 hover:bg-cyan-400 text-black py-4 rounded-2xl font-black transition-all duration-300"
+      >
+        Submit Tool
+      </button>
+
+      {submitMessage && (
+        <p className="text-cyan-400 font-semibold text-center">
+          {submitMessage}
+        </p>
+      )}
+    </form>
+  </div>
+</section>
     </>
   )
 }
@@ -439,14 +542,7 @@ function ToolDetailPage() {
   }, [])
 
   const loadTools = async () => {
-    try {
-      const fetchedTools = await fetchFirebaseTools()
-      setFirebaseTools(fetchedTools)
-    } catch (error) {
-      console.error(error)
-    } finally {
-      setLoadingTools(false)
-    }
+   
   }
 
   const staticTools = toolsData.map((tool) => ({
@@ -488,7 +584,22 @@ function ToolDetailPage() {
     )
   }
 
-  return (
+ return (
+  <>
+    <Helmet>
+      <title>{tool.name} | AI Image Tools</title>
+
+      <meta
+        name="description"
+        content={tool.description}
+      />
+
+      <meta property="og:title" content={tool.name} />
+      <meta property="og:description" content={tool.description} />
+      <meta property="og:image" content={tool.image} />
+      <meta property="og:type" content="website" />
+    </Helmet>
+
     <section className="min-h-screen px-6 pt-40 pb-24">
       <div className="max-w-6xl mx-auto">
         <div className="grid lg:grid-cols-2 gap-16 items-center">
@@ -548,6 +659,7 @@ function ToolDetailPage() {
         </div>
       </div>
     </section>
+    </>
   )
 }
 function LoginPage({ user }) {
@@ -619,7 +731,7 @@ function LoginPage({ user }) {
 function AdminPage({ user }) {
   const [subscribers, setSubscribers] = useState([])
   const [firebaseTools, setFirebaseTools] = useState([])
-
+  const [toolSubmissions, setToolSubmissions] = useState([])
   const [toolName, setToolName] = useState("")
   const [toolCategory, setToolCategory] = useState("")
   const [toolDescription, setToolDescription] = useState("")
@@ -635,6 +747,8 @@ function AdminPage({ user }) {
   useEffect(() => {
     fetchSubscribers()
     fetchAdminTools()
+      fetchToolSubmissions()
+    
   }, [])
 
   const fetchSubscribers = async () => {
@@ -654,14 +768,28 @@ function AdminPage({ user }) {
     }
   }
 
-  const fetchAdminTools = async () => {
-    try {
-      const fetchedTools = await fetchFirebaseTools()
-      setFirebaseTools(fetchedTools)
-    } catch (error) {
-      console.error(error)
-    }
+ const fetchAdminTools = async () => {
+  try {
+    const fetchedTools = await fetchFirebaseTools()
+    setFirebaseTools(fetchedTools)
+  } catch (error) {
+    console.error(error)
   }
+}
+const fetchToolSubmissions = async () => {
+  try {
+    const querySnapshot = await getDocs(collection(db, "toolSubmissions"))
+
+    const submissionList = querySnapshot.docs.map((item) => ({
+      id: item.id,
+      ...item.data(),
+    }))
+
+    setToolSubmissions(submissionList)
+  } catch (error) {
+    console.error(error)
+  }
+}
  const handleImageUpload = async (event) => {
   const file = event.target.files[0]
 
@@ -766,7 +894,35 @@ function AdminPage({ user }) {
   setToolLink(tool.link)
   setToolPricing(tool.pricing)
 }
+const handleApproveSubmission = async (tool) => {
+  try {
+    await addDoc(collection(db, "tools"), {
+      name: tool.name,
+      slug: slugify(tool.name),
+      category: tool.category,
+      description: tool.description,
+      fullDescription: tool.description,
+      image: getFallbackImage(tool.name),
+      link: tool.link,
+      pricing: "Free + Paid",
+      rating: "4.5",
+      users: "New",
+      clicks: 0,
+      featured: false,
+      createdAt: serverTimestamp(),
+    })
 
+    await deleteDoc(doc(db, "toolSubmissions", tool.id))
+
+    fetchAdminTools()
+    fetchToolSubmissions()
+
+    setMessage("Tool approved successfully!")
+  } catch (error) {
+    console.error(error)
+    setMessage("Failed to approve tool.")
+  }
+}
   const handleDeleteTool = async (toolId) => {
     const confirmDelete = window.confirm(
       "Are you sure you want to delete this tool?"
@@ -974,7 +1130,53 @@ function AdminPage({ user }) {
             </div>
           </div>
         </div>
+<div className="bg-white/5 border border-white/10 rounded-[36px] p-8 backdrop-blur-2xl mt-10">
+  <h2 className="text-4xl font-black mb-8">
+    Tool Submissions
+  </h2>
 
+  <div className="space-y-4 max-h-[500px] overflow-auto">
+    {toolSubmissions.length === 0 ? (
+      <p className="text-gray-400">
+        No tool submissions yet.
+      </p>
+    ) : (
+      toolSubmissions.map((tool) => (
+        <div
+          key={tool.id}
+          className="bg-black/30 border border-white/10 rounded-2xl p-5"
+        >
+          <h3 className="text-2xl font-bold text-cyan-400">
+            {tool.name}
+          </h3>
+
+          <p className="text-gray-400 mt-2">
+            {tool.category}
+          </p>
+
+          <p className="text-gray-500 mt-3">
+            {tool.description}
+          </p>
+
+          <a
+            href={tool.link}
+            target="_blank"
+            rel="noreferrer"
+            className="inline-block mt-4 text-cyan-400 font-bold hover:underline"
+          >
+            Visit Tool
+          </a>
+          <button
+  onClick={() => handleApproveSubmission(tool)}
+  className="ml-4 bg-green-500 hover:bg-green-400 text-black px-5 py-3 rounded-2xl font-bold transition-all duration-300"
+>
+  Approve
+</button>
+        </div>
+      ))
+    )}
+  </div>
+</div>
         <div className="bg-white/5 border border-white/10 rounded-[36px] p-8 backdrop-blur-2xl mt-10">
           <h2 className="text-4xl font-black mb-8">
             Subscribers
@@ -1141,5 +1343,9 @@ function Layout() {
 }
 
 export default function App() {
-  return <Layout />
+  return (
+    <HelmetProvider>
+      <Layout />
+    </HelmetProvider>
+  )
 }
