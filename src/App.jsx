@@ -814,9 +814,16 @@ const fetchToolSubmissions = async () => {
       }
     )
 
-    const data = await response.json()
+   const data = await response.json()
 
-    setToolImage(data.secure_url)
+console.log("Cloudinary response:", data)
+
+if (!data.secure_url) {
+  setMessage(data.error?.message || "Image upload failed.")
+  return
+}
+
+setToolImage(data.secure_url)
     setMessage("Image uploaded successfully!")
   } catch (error) {
     console.error(error)
