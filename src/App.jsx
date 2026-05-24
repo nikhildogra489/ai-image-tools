@@ -124,172 +124,220 @@ function HomePage() {
 
   return (
     <>
-      <section className="relative min-h-screen flex items-center px-6 pt-32">
-        <div className="max-w-7xl mx-auto grid md:grid-cols-2 gap-20 items-center">
-          <div>
-            <div className="inline-block bg-cyan-500/10 border border-cyan-500/30 px-6 py-2 rounded-full text-cyan-300 mb-8">
-              🚀 Discover The Future Of AI
-            </div>
+     <section className="relative min-h-screen flex items-center overflow-hidden px-6 pt-32">
+  <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(34,211,238,0.22),transparent_35%),radial-gradient(circle_at_bottom_right,rgba(168,85,247,0.25),transparent_40%)]"></div>
 
-            <h1 className="text-6xl md:text-8xl font-black leading-tight">
-              Discover The Best <br />
-              <span className="bg-gradient-to-r from-cyan-400 to-purple-500 bg-clip-text text-transparent">
-                AI Image Tools
-              </span>
-            </h1>
+  <div className="absolute left-10 top-32 h-32 w-32 rounded-full border border-cyan-400/20 blur-sm"></div>
+  <div className="absolute right-20 top-40 h-24 w-24 rounded-full bg-purple-500/20 blur-2xl"></div>
+  <div className="absolute bottom-24 left-1/3 h-40 w-40 rounded-full bg-cyan-500/10 blur-3xl"></div>
 
-            <p className="text-gray-400 mt-8 text-xl leading-relaxed max-w-2xl">
-              Explore AI image generators, photo editors, background removers,
-              logo makers, anime creators, and creative AI platforms.
-            </p>
+  <div className="relative z-10 max-w-7xl mx-auto grid lg:grid-cols-2 gap-20 items-center">
+    <div>
+      <div className="mb-8 inline-flex items-center gap-3 rounded-full border border-cyan-400/30 bg-cyan-400/10 px-6 py-3 text-cyan-300 shadow-lg shadow-cyan-500/10">
+        <span className="h-2 w-2 rounded-full bg-cyan-400 animate-pulse"></span>
+        AI Tools Directory For Creators
+      </div>
 
-            <div className="mt-12 flex flex-wrap gap-5">
-              <a
-                href="#featured"
-                className="bg-cyan-500 hover:bg-cyan-400 text-black px-8 py-4 rounded-2xl font-bold text-lg shadow-lg shadow-cyan-500/30 hover:scale-105 inline-block transition-all duration-300"
-              >
-                View Featured Tools
-              </a>
+      <h1 className="text-6xl md:text-8xl font-black leading-[0.95] tracking-tight">
+        Discover Next-Gen
+        <span className="block bg-gradient-to-r from-cyan-300 via-blue-400 to-purple-500 bg-clip-text text-transparent">
+          AI Image Tools
+        </span>
+      </h1>
 
-              <a
-                href="#tools"
-                className="border border-white/10 hover:border-cyan-400 px-8 py-4 rounded-2xl font-bold text-lg hover:scale-105 inline-block transition-all duration-300"
-              >
-                Browse All Tools
-              </a>
-            </div>
-          </div>
+      <p className="mt-8 max-w-2xl text-xl leading-relaxed text-gray-400">
+        Find powerful AI generators, photo editors, background removers,
+        upscalers, logo makers, and creative tools — all in one futuristic
+        AI-powered directory.
+      </p>
 
-          <div className="relative flex items-center justify-center">
-            <div className="w-[400px] h-[400px] rounded-full bg-gradient-to-r from-cyan-500 to-purple-500 blur-3xl opacity-30 absolute"></div>
+      <div className="mt-12 flex flex-wrap gap-5">
+        <a
+          href="#tools"
+          className="rounded-2xl bg-cyan-400 px-9 py-5 text-lg font-black text-black shadow-xl shadow-cyan-500/30 transition-all duration-300 hover:scale-105 hover:bg-cyan-300"
+        >
+          Explore Tools
+        </a>
 
-            <div className="relative w-[320px] h-[320px] bg-white/5 border border-white/10 rounded-[40px] backdrop-blur-2xl flex items-center justify-center text-8xl shadow-2xl">
+        <a
+          href="#featured"
+          className="rounded-2xl border border-white/15 bg-white/5 px-9 py-5 text-lg font-bold text-white backdrop-blur-xl transition-all duration-300 hover:scale-105 hover:border-cyan-400 hover:text-cyan-300"
+        >
+          View Featured
+        </a>
+      </div>
+
+      <div className="mt-12 grid max-w-xl grid-cols-3 gap-4">
+        <div className="rounded-3xl border border-white/10 bg-white/5 p-5 backdrop-blur-xl">
+          <p className="text-3xl font-black text-cyan-300">{allTools.length}+</p>
+          <p className="mt-1 text-sm text-gray-400">Tools</p>
+        </div>
+
+        <div className="rounded-3xl border border-white/10 bg-white/5 p-5 backdrop-blur-xl">
+          <p className="text-3xl font-black text-purple-300">
+            {categories.length - 1}+
+          </p>
+          <p className="mt-1 text-sm text-gray-400">Categories</p>
+        </div>
+
+        <div className="rounded-3xl border border-white/10 bg-white/5 p-5 backdrop-blur-xl">
+          <p className="text-3xl font-black text-green-300">Free</p>
+          <p className="mt-1 text-sm text-gray-400">To Explore</p>
+        </div>
+      </div>
+    </div>
+
+    <div className="relative flex items-center justify-center">
+      <div className="absolute h-[460px] w-[460px] rounded-full bg-gradient-to-r from-cyan-500/30 to-purple-500/30 blur-3xl"></div>
+
+      <div className="relative h-[430px] w-[430px] rounded-[48px] border border-white/10 bg-white/5 p-8 shadow-2xl backdrop-blur-2xl">
+        <div className="absolute -right-6 -top-6 rounded-3xl border border-cyan-400/30 bg-slate-950/80 px-5 py-4 shadow-xl backdrop-blur-xl">
+          <p className="text-sm text-gray-400">AI Scan</p>
+          <p className="text-xl font-black text-cyan-300">Active</p>
+        </div>
+
+        <div className="absolute -left-8 bottom-10 rounded-3xl border border-purple-400/30 bg-slate-950/80 px-5 py-4 shadow-xl backdrop-blur-xl">
+          <p className="text-sm text-gray-400">Tools Found</p>
+          <p className="text-xl font-black text-purple-300">{allTools.length}+</p>
+        </div>
+
+        <div className="flex h-full items-center justify-center rounded-[38px] border border-white/10 bg-black/30">
+          <div className="text-center">
+            <div className="mx-auto mb-8 flex h-32 w-32 items-center justify-center rounded-[36px] bg-gradient-to-br from-cyan-400 to-purple-500 text-7xl shadow-2xl shadow-cyan-500/30">
               🤖
             </div>
-          </div>
-        </div>
-      </section>
 
-      <section className="relative px-8 pb-24">
-        <div className="max-w-7xl mx-auto grid md:grid-cols-3 gap-8">
-          <StatCard value={`${allTools.length}+`} label="AI Tools Listed" />
-          <StatCard value={`${categories.length - 1}+`} label="AI Categories" />
-          <StatCard value="20M+" label="Combined Users" />
-        </div>
-      </section>
-            <section id="featured" className="relative px-8 pb-24">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-14">
-            <p className="text-cyan-400 font-bold mb-3">EDITOR PICKS</p>
-
-            <h2 className="text-5xl font-black">
-              Featured AI Tools
-            </h2>
-
-            <p className="text-gray-400 mt-5 text-lg">
-              Our top selected AI tools for creators, designers, and businesses.
+            <h3 className="text-3xl font-black">AI Discovery Engine</h3>
+            <p className="mt-4 text-gray-400">
+              Search. Compare. Create faster.
             </p>
           </div>
-
-          <div className="grid md:grid-cols-3 gap-8">
-            {featuredTools.map((tool, index) => (
-              <ToolCard
-                key={`${tool.source}-${tool.id || tool.slug}`}
-                tool={tool}
-                featured
-                index={index}
-              />
-            ))}
-          </div>
         </div>
-      </section>
+      </div>
+    </div>
+  </div>
+</section>
+<section className="relative px-8 pb-24">
+  <div className="max-w-7xl mx-auto grid md:grid-cols-3 gap-8">
+    <StatCard value={`${allTools.length}+`} label="AI Tools Listed" />
+    <StatCard value={`${categories.length - 1}+`} label="AI Categories" />
+    <StatCard value="20M+" label="Combined Users" />
+  </div>
+</section>
 
-      <section id="categories" className="relative px-8 pb-24">
-        <h2 className="text-5xl font-black text-center mb-14">
-          Categories
-        </h2>
+<section id="featured" className="relative px-8 pb-24">
+  <div className="max-w-7xl mx-auto">
+    <div className="text-center mb-14">
+      <p className="text-cyan-400 font-bold mb-3">EDITOR PICKS</p>
 
-        <div className="flex flex-wrap justify-center gap-5">
-          {categories.map((category) => (
-            <button
-              key={category}
-              onClick={() => setSelectedCategory(category)}
-              className={`px-7 py-4 rounded-2xl transition-all duration-300 font-semibold ${
-                selectedCategory === category
-                  ? "bg-cyan-500 text-black scale-105"
-                  : "bg-white/5 border border-white/10 hover:border-cyan-400 hover:scale-105"
-              }`}
-            >
-              {category}
-            </button>
-          ))}
-        </div>
-      </section>
+      <h2 className="text-5xl font-black">
+        Featured AI Tools
+      </h2>
 
-      <section id="tools" className="relative px-8 pb-24">
-        <h2 className="text-5xl font-black text-center mb-8">
-          Trending AI Tools
-        </h2>
+      <p className="text-gray-400 mt-5 text-lg">
+        Our top selected AI tools for creators, designers, and businesses.
+      </p>
+    </div>
 
-        <div className="max-w-2xl mx-auto mb-14">
-          <input
-            type="text"
-            placeholder="Search AI tools..."
-            value={search}
-            onChange={(event) => setSearch(event.target.value)}
-            className="w-full bg-white/5 backdrop-blur-2xl border border-white/10 focus:border-cyan-400 outline-none px-6 py-5 rounded-2xl text-white text-lg"
-          />
+    <div className="grid md:grid-cols-3 gap-8">
+      {featuredTools.map((tool, index) => (
+        <ToolCard
+          key={`${tool.source}-${tool.id || tool.slug}`}
+          tool={tool}
+          featured
+          index={index}
+        />
+      ))}
+    </div>
+  </div>
+</section>
 
-          <div className="flex flex-wrap items-center justify-between mt-5 gap-4">
-            <p className="text-gray-400">
-              Found{" "}
-              <span className="text-cyan-400 font-bold">
-                {filteredTools.length}
-              </span>{" "}
-              tools
-            </p>
+<section id="categories" className="relative px-8 pb-24">
+  <h2 className="text-5xl font-black text-center mb-14">
+    Categories
+  </h2>
 
-            <div className="flex gap-3 flex-wrap">
-              {["AI", "Image", "Editor"].map((keyword) => (
-                <button
-                  key={keyword}
-                  onClick={() => setSearch(keyword)}
-                  className="bg-white/5 border border-white/10 hover:border-cyan-400 px-4 py-2 rounded-full text-sm transition-all duration-300"
-                >
-                  {keyword}
-                </button>
-              ))}
-            </div>
-          </div>
-        </div>
+  <div className="flex flex-wrap justify-center gap-5">
+    {categories.map((category) => (
+      <button
+        key={category}
+        onClick={() => setSelectedCategory(category)}
+        className={`px-7 py-4 rounded-2xl transition-all duration-300 font-semibold ${
+          selectedCategory === category
+            ? "bg-cyan-500 text-black scale-105"
+            : "bg-white/5 border border-white/10 hover:border-cyan-400 hover:scale-105"
+        }`}
+      >
+        {category}
+      </button>
+    ))}
+  </div>
+</section>
 
-        {loadingTools ? (
-          <p className="text-center text-cyan-400 text-xl">
-            Loading tools...
+<section id="tools" className="relative px-8 pb-24">
+  <h2 className="text-5xl font-black text-center mb-8">
+    Trending AI Tools
+  </h2>
+
+  <div className="max-w-2xl mx-auto mb-14">
+    <input
+      type="text"
+      placeholder="Search AI tools..."
+      value={search}
+      onChange={(event) => setSearch(event.target.value)}
+      className="w-full bg-white/5 backdrop-blur-2xl border border-white/10 focus:border-cyan-400 outline-none px-6 py-5 rounded-2xl text-white text-lg"
+    />
+
+    <div className="flex flex-wrap items-center justify-between mt-5 gap-4">
+      <p className="text-gray-400">
+        Found{" "}
+        <span className="text-cyan-400 font-bold">
+          {filteredTools.length}
+        </span>{" "}
+        tools
+      </p>
+
+      <div className="flex gap-3 flex-wrap">
+        {["AI", "Image", "Editor"].map((keyword) => (
+          <button
+            key={keyword}
+            onClick={() => setSearch(keyword)}
+            className="bg-white/5 border border-white/10 hover:border-cyan-400 px-4 py-2 rounded-full text-sm transition-all duration-300"
+          >
+            {keyword}
+          </button>
+        ))}
+      </div>
+    </div>
+  </div>
+
+  {loadingTools ? (
+    <p className="text-center text-cyan-400 text-xl">
+      Loading tools...
+    </p>
+  ) : (
+    <div className="grid md:grid-cols-3 gap-8 max-w-7xl mx-auto">
+      {filteredTools.length === 0 ? (
+        <div className="col-span-full text-center py-20">
+          <h3 className="text-4xl font-black mb-4">
+            No AI Tools Found
+          </h3>
+
+          <p className="text-gray-400 text-lg">
+            Try searching for another keyword.
           </p>
-        ) : (
-          <div className="grid md:grid-cols-3 gap-8 max-w-7xl mx-auto">
-            {filteredTools.length === 0 ? (
-              <div className="col-span-full text-center py-20">
-                <h3 className="text-4xl font-black mb-4">
-                  No AI Tools Found
-                </h3>
-
-                <p className="text-gray-400 text-lg">
-                  Try searching for another keyword.
-                </p>
-              </div>
-            ) : (
-              filteredTools.map((tool) => (
-                <ToolCard
-                  key={`${tool.source}-${tool.id || tool.slug}`}
-                  tool={tool}
-                />
-              ))
-            )}
-          </div>
-        )}
-      </section>
+        </div>
+      ) : (
+        filteredTools.map((tool) => (
+          <ToolCard
+            key={`${tool.source}-${tool.id || tool.slug}`}
+            tool={tool}
+          />
+        ))
+      )}
+    </div>
+  )}
+</section>
     </>
   )
 }
@@ -463,7 +511,7 @@ function ToolDetailPage() {
             </div>
 
             <a
-              href={tool.link}
+              href={tool.affiliateLink || tool.link}
               target="_blank"
               rel="noreferrer"
               className="inline-block bg-cyan-500 hover:bg-cyan-400 text-black px-8 py-5 rounded-2xl font-black text-lg transition-all duration-300 hover:scale-105"
@@ -562,6 +610,7 @@ function AdminPage({ user }) {
   const [toolDescription, setToolDescription] = useState("")
   const [toolImage, setToolImage] = useState("")
   const [toolLink, setToolLink] = useState("")
+  const [affiliateLink, setAffiliateLink] = useState("")
   const [toolPricing, setToolPricing] = useState("Free + Paid")
   const [message, setMessage] = useState("")
   const [uploading, setUploading] = useState(false)
@@ -648,6 +697,7 @@ function AdminPage({ user }) {
         fullDescription: toolDescription,
         image: toolImage || getFallbackImage(toolName),
         link: toolLink,
+        affiliateLink: affiliateLink,
         pricing: toolPricing,
         bestFor: toolCategory,
       })
@@ -663,6 +713,7 @@ function AdminPage({ user }) {
         fullDescription: toolDescription,
         image: toolImage || getFallbackImage(toolName),
         link: toolLink,
+        affiliateLink: affiliateLink,
         pricing: toolPricing,
         rating: "4.5",
         users: "New",
@@ -816,6 +867,13 @@ function AdminPage({ user }) {
                 onChange={(event) => setToolLink(event.target.value)}
                 className="w-full bg-black/30 border border-white/10 focus:border-cyan-400 outline-none px-5 py-4 rounded-2xl text-white"
               />
+              <input
+  type="text"
+  placeholder="Affiliate Link (optional)"
+  value={affiliateLink}
+  onChange={(event) => setAffiliateLink(event.target.value)}
+  className="w-full bg-black/30 border border-white/10 focus:border-cyan-400 outline-none px-5 py-4 rounded-2xl text-white"
+/>
 
               <select
                 value={toolPricing}
