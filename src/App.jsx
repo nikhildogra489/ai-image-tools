@@ -14,6 +14,7 @@ import {
   getDocs,
   deleteDoc,
   doc,
+  updateDoc,
   serverTimestamp,
 } from "firebase/firestore"
 
@@ -567,6 +568,7 @@ function AdminPage({ user }) {
   const [toolLink, setToolLink] = useState("")
   const [toolPricing, setToolPricing] = useState("Free + Paid")
   const [message, setMessage] = useState("")
+  const [editingToolId, setEditingToolId] = useState(null)
 
   useEffect(() => {
     fetchSubscribers()
@@ -600,24 +602,38 @@ function AdminPage({ user }) {
   }
 
   const handleAddTool = async (event) => {
-    event.preventDefault()
-    setMessage("")
+  event.preventDefault()
+  setMessage("")
 
-    if (!toolName || !toolCategory || !toolDescription || !toolLink) {
-      setMessage("Please fill all required fields.")
-      return
-    }
+  if (!toolName || !toolCategory || !toolDescription || !toolLink) {
+    setMessage("Please fill all required fields.")
+    return
+  }
 
-    try {
+  try {
+    if (editingToolId) {
+      await updateDoc(doc(db, "tools", editingToolId), {
+        name: toolName,
+        slug: slugify(toolName),
+        category: toolCategory,
+        description: toolDescription,
+        fullDescription: toolDescription,
+        image: toolImage || getFallbackImage(toolName),
+        link: toolLink,
+        pricing: toolPricing,
+        bestFor: toolCategory,
+      })
+
+      setMessage("Tool updated successfully!")
+      setEditingToolId(null)
+    } else {
       await addDoc(collection(db, "tools"), {
         name: toolName,
         slug: slugify(toolName),
         category: toolCategory,
         description: toolDescription,
         fullDescription: toolDescription,
-        image:
-          toolImage ||
-          getFallbackImage(toolName),
+        image: toolImage || getFallbackImage(toolName),
         link: toolLink,
         pricing: toolPricing,
         rating: "4.5",
@@ -627,20 +643,31 @@ function AdminPage({ user }) {
       })
 
       setMessage("Tool added successfully!")
-
-      setToolName("")
-      setToolCategory("")
-      setToolDescription("")
-      setToolImage("")
-      setToolLink("")
-      setToolPricing("Free + Paid")
-
-      fetchAdminTools()
-    } catch (error) {
-      console.error(error)
-      setMessage("Something went wrong while adding the tool.")
     }
+
+    setToolName("")
+    setToolCategory("")
+    setToolDescription("")
+    setToolImage("")
+    setToolLink("")
+    setToolPricing("Free + Paid")
+
+    fetchAdminTools()
+  } catch (error) {
+    console.error(error)
+    setMessage("Something went wrong while saving the tool.")
   }
+}
+  const handleEditTool = (tool) => {
+  setEditingToolId(tool.id)
+
+  setToolName(tool.name)
+  setToolCategory(tool.category)
+  setToolDescription(tool.description)
+  setToolImage(tool.image)
+  setToolLink(tool.link)
+  setToolPricing(tool.pricing)
+}
 
   const handleDeleteTool = async (toolId) => {
     const confirmDelete = window.confirm(
@@ -755,7 +782,7 @@ function AdminPage({ user }) {
                 type="submit"
                 className="w-full bg-cyan-500 hover:bg-cyan-400 text-black py-4 rounded-2xl font-bold transition-all duration-300"
               >
-                Add Tool
+                {editingToolId ? "Update Tool" : "Add Tool"}
               </button>
             </form>
           </div>
@@ -788,12 +815,21 @@ function AdminPage({ user }) {
                       {tool.link}
                     </p>
 
-                    <button
-                      onClick={() => handleDeleteTool(tool.id)}
-                      className="mt-5 bg-red-500 hover:bg-red-400 text-white px-5 py-3 rounded-2xl font-bold transition-all duration-300"
-                    >
-                      Delete Tool
-                    </button>
+                    <div className="flex gap-3 mt-5">
+  <button
+    onClick={() => handleEditTool(tool)}
+    className="bg-cyan-500 hover:bg-cyan-400 text-black px-5 py-3 rounded-2xl font-bold transition-all duration-300"
+  >
+    Edit
+  </button>
+
+  <button
+    onClick={() => handleDeleteTool(tool.id)}
+    className="bg-red-500 hover:bg-red-400 text-white px-5 py-3 rounded-2xl font-bold transition-all duration-300"
+  >
+    Delete
+  </button>
+</div>
                   </div>
                 ))
               )}
