@@ -191,7 +191,7 @@ const [submitMessage, setSubmitMessage] = useState("")
 
      <h1
   className="text-6xl md:text-8xl font-black leading-[0.95] tracking-tight"
-  style={{ fontFamily: "'Baloo 2', sans-serif" }}
+  style={{ fontFamily: "'Chewy', cursive" }}
 >
         Discover Next-Gen
         <span className="block bg-gradient-to-r from-cyan-300 via-blue-400 to-purple-500 bg-clip-text text-transparent">
