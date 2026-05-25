@@ -1178,7 +1178,7 @@ const handleApproveSubmission = async (tool) => {
           </p>
 
           <a
-            href={tool.link}
+           href={tool.affiliateLink || tool.link}
             target="_blank"
             rel="noreferrer"
             className="inline-block mt-4 text-cyan-400 font-bold hover:underline"
