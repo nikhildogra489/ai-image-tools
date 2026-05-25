@@ -366,7 +366,7 @@ const [submitMessage, setSubmitMessage] = useState("")
       Loading tools...
     </p>
   ) : (
-    <div className="grid md:grid-cols-3 gap-8 max-w-7xl mx-auto">
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 max-w-7xl mx-auto">
       {filteredTools.length === 0 ? (
         <div className="col-span-full text-center py-20">
           <h3 className="text-4xl font-black mb-4">
