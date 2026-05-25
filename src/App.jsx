@@ -188,7 +188,7 @@ const [submitMessage, setSubmitMessage] = useState("")
         AI Tools Directory For Creators
       </div>
 
-      <h1 className="text-6xl md:text-8xl font-black leading-[0.95] tracking-tight">
+      <h1 className="text-5xl sm:text-6xl md:text-8xl font-black leading-[1.05] tracking-tight">
         Discover Next-Gen
         <span className="block bg-gradient-to-r from-cyan-300 via-blue-400 to-purple-500 bg-clip-text text-transparent">
           AI Image Tools
@@ -1362,7 +1362,7 @@ function Layout() {
         <div className="backdrop-blur-2xl bg-white/5 border border-white/10 rounded-3xl px-4 sm:px-8 py-4 sm:py-5 flex items-center justify-between gap-4 shadow-2xl">
           <Link
             to="/"
-            className="text-lg sm:text-3xl font-black bg-gradient-to-r from-cyan-400 to-purple-500 bg-clip-text text-transparent whitespace-nowrap"
+            className="text-3xl font-black bg-gradient-to-r from-cyan-400 to-purple-500 bg-clip-text text-transparent"
           >
             AI Image Tools
           </Link>
