@@ -68,6 +68,7 @@ function normalizeFirebaseTool(item) {
       "AI tool added from admin dashboard.",
     image: data.image || getFallbackImage(data.name || "AI"),
     link: data.link || "https://google.com",
+    affiliateLink: data.affiliateLink || "",
     pricing: data.pricing || "Free + Paid",
     rating: data.rating || "4.5",
     users: data.users || "New",
