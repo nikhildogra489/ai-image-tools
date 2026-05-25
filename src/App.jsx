@@ -1359,10 +1359,10 @@ function Layout() {
       <div className="absolute bottom-0 right-0 w-[600px] h-[600px] bg-purple-500/20 blur-[160px] rounded-full"></div>
 
       <nav className="fixed top-5 left-1/2 -translate-x-1/2 z-50 w-[95%] max-w-6xl">
-        <div className="backdrop-blur-2xl bg-white/5 border border-white/10 rounded-3xl px-8 py-5 flex items-center justify-between shadow-2xl">
+        <div className="backdrop-blur-2xl bg-white/5 border border-white/10 rounded-3xl px-4 sm:px-8 py-4 sm:py-5 flex items-center justify-between gap-4 shadow-2xl">
           <Link
             to="/"
-            className="text-3xl font-black bg-gradient-to-r from-cyan-400 to-purple-500 bg-clip-text text-transparent"
+            className="text-xl sm:text-3xl font-black bg-gradient-to-r from-cyan-400 to-purple-500 bg-clip-text text-transparent whitespace-nowrap"
           >
             AI Image Tools
           </Link>
