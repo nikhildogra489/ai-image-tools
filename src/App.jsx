@@ -174,21 +174,21 @@ const [submitMessage, setSubmitMessage] = useState("")
 
   return (
     <>
-    <section className="relative min-h-screen flex items-center overflow-hidden px-4 sm:px-6 pt-32">
+   <section className="relative min-h-screen flex items-center overflow-hidden px-6 pt-32">
   <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(34,211,238,0.22),transparent_35%),radial-gradient(circle_at_bottom_right,rgba(168,85,247,0.25),transparent_40%)]"></div>
 
   <div className="absolute left-10 top-32 h-32 w-32 rounded-full border border-cyan-400/20 blur-sm"></div>
   <div className="absolute right-20 top-40 h-24 w-24 rounded-full bg-purple-500/20 blur-2xl"></div>
   <div className="absolute bottom-24 left-1/3 h-40 w-40 rounded-full bg-cyan-500/10 blur-3xl"></div>
 
- <div className="relative z-10 max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+ <div className="relative z-10 max-w-7xl mx-auto grid lg:grid-cols-2 gap-20 items-center">
     <div>
       <div className="mb-8 inline-flex items-center gap-3 rounded-full border border-cyan-400/30 bg-cyan-400/10 px-6 py-3 text-cyan-300 shadow-lg shadow-cyan-500/10">
         <span className="h-2 w-2 rounded-full bg-cyan-400 animate-pulse"></span>
         AI Tools Directory For Creators
       </div>
 
-      <h1 className="text-5xl sm:text-6xl md:text-8xl font-black leading-[1.05] tracking-tight">
+     <h1 className="text-6xl md:text-8xl font-black leading-[0.95] tracking-tight">
         Discover Next-Gen
         <span className="block bg-gradient-to-r from-cyan-300 via-blue-400 to-purple-500 bg-clip-text text-transparent">
           AI Image Tools
@@ -238,9 +238,9 @@ const [submitMessage, setSubmitMessage] = useState("")
     </div>
 
     <div className="relative flex items-center justify-center">
-      <div className="absolute h-[280px] w-[280px] sm:h-[460px] sm:w-[460px] rounded-full bg-gradient-to-r from-cyan-500/30 to-purple-500/30 blur-3xl"></div>
+     <div className="absolute h-[460px] w-[460px] rounded-full bg-gradient-to-r from-cyan-500/30 to-purple-500/30 blur-3xl"></div>
 
-      <div className="relative h-[330px] sm:h-[430px] w-full max-w-[430px] rounded-[48px] border border-white/10 bg-white/5 p-5 sm:p-8 shadow-2xl backdrop-blur-2xl">
+      <div className="relative h-[430px] w-[430px] rounded-[48px] border border-white/10 bg-white/5 p-8 shadow-2xl backdrop-blur-2xl">
         <div className="absolute -right-6 -top-6 rounded-3xl border border-cyan-400/30 bg-slate-950/80 px-5 py-4 shadow-xl backdrop-blur-xl">
           <p className="text-sm text-gray-400">AI Scan</p>
           <p className="text-xl font-black text-cyan-300">Active</p>
@@ -1358,8 +1358,8 @@ function Layout() {
       <div className="absolute top-0 left-0 w-[600px] h-[600px] bg-cyan-500/20 blur-[160px] rounded-full"></div>
       <div className="absolute bottom-0 right-0 w-[600px] h-[600px] bg-purple-500/20 blur-[160px] rounded-full"></div>
 
-      <nav className="fixed top-4 left-0 right-0 z-50 mx-auto w-full px-4">
-        <div className="backdrop-blur-2xl bg-white/5 border border-white/10 rounded-3xl px-4 sm:px-8 py-4 sm:py-5 flex items-center justify-between gap-4 shadow-2xl">
+      <nav className="fixed top-5 left-1/2 -translate-x-1/2 z-50 w-[95%] max-w-6xl">
+        <div className="backdrop-blur-2xl bg-white/5 border border-white/10 rounded-3xl px-8 py-5 flex items-center justify-between shadow-2xl">
           <Link
             to="/"
             className="text-3xl font-black bg-gradient-to-r from-cyan-400 to-purple-500 bg-clip-text text-transparent"
