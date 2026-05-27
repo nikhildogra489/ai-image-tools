@@ -191,7 +191,6 @@ const [submitMessage, setSubmitMessage] = useState("")
 
      <h1
   className="text-6xl md:text-8xl font-black leading-[0.95] tracking-tight"
-  style={{ fontFamily: "'Chewy', cursive" }}
 >
         Discover Next-Gen
         <span className="block bg-gradient-to-r from-cyan-300 via-blue-400 to-purple-500 bg-clip-text text-transparent">
@@ -649,13 +648,33 @@ function ToolDetailPage() {
 
             <button
   onClick={async () => {
-    if (tool.source === "firebase" && tool.id) {
-      await updateDoc(doc(db, "tools", tool.id), {
-        clicks: increment(1),
-      })
+    const websiteLink = tool.affiliateLink || tool.link
+
+    if (!websiteLink) {
+      alert("No website link added.")
+      return
     }
 
-    window.open(tool.affiliateLink || tool.link, "_blank")
+    let finalLink = websiteLink
+
+    if (
+      !websiteLink.startsWith("http://") &&
+      !websiteLink.startsWith("https://")
+    ) {
+      finalLink = `https://${websiteLink}`
+    }
+
+    try {
+      if (tool.source === "firebase" && tool.id) {
+        await updateDoc(doc(db, "tools", tool.id), {
+          clicks: increment(1),
+        })
+      }
+
+      window.open(finalLink, "_blank", "noopener,noreferrer")
+    } catch (error) {
+      console.error(error)
+    }
   }}
   className="inline-block bg-cyan-500 hover:bg-cyan-400 text-black px-8 py-5 rounded-2xl font-black text-lg transition-all duration-300 hover:scale-105"
 >
